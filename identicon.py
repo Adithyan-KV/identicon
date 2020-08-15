@@ -1,8 +1,10 @@
 import hashlib
+import colorsys
+import colors
 
 
 def main():
-    image_data = ImageDataGenerator('random dude')
+    image_data = ImageDataGenerator('how to')
 
 
 def get_color_from_hash(hash_value, bitdepth=8):
@@ -29,14 +31,15 @@ def rgb_to_hex(r, g, b):
 class ImageDataGenerator():
     def __init__(self, username):
         # sha1 hash used over default hash in python as default hash is salted
+        # and determinism is lost
         hash_hex = hashlib.sha1(username.encode('utf8')).hexdigest()
         self.hash_value = int(hash_hex, 16)
         self.pixel_matrix = self.pixel_matrix_from_hash(self.hash_value)
-        print(self.pixel_matrix)
+        self.color = self.random_color_from_hash(self.hash_value)
 
     def pixel_matrix_from_hash(self, hash_value):
-        # iterate through the hash and set individual pixels to on or off
-        # depending on whether has value at index is odd or even
+        """ iterate through the hash and set individual pixels to on or off
+         depending on whether has value at index is odd or even"""
         pixel_matrix = [[0 for i in range(5)] for j in range(5)]
         # first 25 characters of the hash to enumerate over
         hash_string = str(hash_value).strip('-')[:24]
@@ -54,6 +57,17 @@ class ImageDataGenerator():
                     pixel_matrix[x_index][y_mirror_index] = 1
 
         return pixel_matrix
+
+    def random_color_from_hash(self, hash_value):
+        # set a random hue value between 0 and 1 based on the hash
+        hue = (hash_value % 100)/100
+        # saturation, value hardcoded for consistency in palette
+        saturation = 0.78
+        value = 0.92
+        color_rgb = colorsys.hsv_to_rgb(hue, saturation, value)
+        hex_code = colors.rgb_to_hex(
+            color_rgb[0], color_rgb[1], color_rgb[2], 'normalized')
+        return hex_code
 
 
 if __name__ == "__main__":
