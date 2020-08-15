@@ -4,28 +4,7 @@ import colors
 
 
 def main():
-    image_data = ImageDataGenerator('how to')
-
-
-def get_color_from_hash(hash_value, bitdepth=8):
-    bits_per_channel = 2**bitdepth
-    # generate deterministic values for each channel from the random hash
-    red_value = hash_value % bits_per_channel
-    blue_value = (hash_value % 1000) % bits_per_channel
-    green_value = ((hash_value % 1000000)//1000) % bits_per_channel
-    hex_color_code = rgb_to_hex(red_value, green_value, blue_value)
-
-    print(hex_color_code)
-
-
-def rgb_to_hex(r, g, b):
-    hex_r = f'{hex(r)}'.strip('0x')
-    hex_g = f'{hex(g)}'.strip('0x')
-    hex_b = f'{hex(b)}'.strip('0x')
-
-    hex_code = f'#{hex_r}{hex_g}{hex_b}'
-
-    return hex_code
+    image_data = ImageDataGenerator('hello')
 
 
 class ImageDataGenerator():
@@ -36,6 +15,8 @@ class ImageDataGenerator():
         self.hash_value = int(hash_hex, 16)
         self.pixel_matrix = self.pixel_matrix_from_hash(self.hash_value)
         self.color = self.random_color_from_hash(self.hash_value)
+        self.bgcolor = '#bfbfbf'
+        print(pixel_matrix)
 
     def pixel_matrix_from_hash(self, hash_value):
         """ iterate through the hash and set individual pixels to on or off

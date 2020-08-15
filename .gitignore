@@ -1,2 +1,5 @@
 #ignore python compiled bytecode files
 *.pyc
+
+#igonore the virtual environment directory
+img
