@@ -7,10 +7,34 @@ from PIL import Image
 
 def main():
     image_data = ImageDataGenerator('hello')
-    img = image_data.image_matrix
-    print(type(img))
-    image = Image.fromarray((img*255).astype(np.uint8))
-    image.save('bw_identicon.jpeg')
+    img_bw_2d = image_data.image_matrix
+    img_bw_3d = np.array([img_bw_2d for i in range(3)])
+    color = image_data.color
+    img_color = add_color_to_matrix(img_bw_3d, color)
+    print(img_color)
+    print(img_color.shape)
+    image = Image.fromarray(img_color.astype(np.uint8))
+    image.save('color_identicon.jpeg')
+
+
+def add_color_to_matrix(matrix, color):
+    """Takes in a 3d matrix with on or off pixel values and applies the color
+
+
+    Args:
+        matrix (nparray): 3D np array showing on and off pixel values
+        color (tuple): the (R,G,B) tuple
+
+    Returns:
+        nparray: returns a 3D nparray that represents an image file, with the
+        3 dimensions representing the RGB channels
+    """
+    for i in range(3):
+        matrix[i, :, :] = np.round(matrix[i, :, :]*color[i]*255)
+
+    reshaped_matrix = np.transpose(matrix, (1, 2, 0))
+
+    return reshaped_matrix
 
 
 class ImageDataGenerator():
@@ -23,7 +47,6 @@ class ImageDataGenerator():
         self.color = self.random_color_from_hash(self.hash_value)
         self.bgcolor = '#bfbfbf'
         self.image_matrix = np.array(self.pixel_matrix)
-        print(self.image_matrix)
 
     def pixel_matrix_from_hash(self, hash_value):
         """ iterate through the hash and set individual pixels to on or off
@@ -55,7 +78,7 @@ class ImageDataGenerator():
         color_rgb = colorsys.hsv_to_rgb(hue, saturation, value)
         hex_code = colors.rgb_to_hex(
             color_rgb[0], color_rgb[1], color_rgb[2], 'normalized')
-        return hex_code
+        return color_rgb
 
 
 if __name__ == "__main__":
