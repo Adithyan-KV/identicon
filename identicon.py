@@ -1,10 +1,16 @@
 import hashlib
 import colorsys
 import colors
+import numpy as np
+from PIL import Image
 
 
 def main():
     image_data = ImageDataGenerator('hello')
+    img = image_data.image_matrix
+    print(type(img))
+    image = Image.fromarray((img*255).astype(np.uint8))
+    image.save('bw_identicon.jpeg')
 
 
 class ImageDataGenerator():
@@ -16,7 +22,8 @@ class ImageDataGenerator():
         self.pixel_matrix = self.pixel_matrix_from_hash(self.hash_value)
         self.color = self.random_color_from_hash(self.hash_value)
         self.bgcolor = '#bfbfbf'
-        print(pixel_matrix)
+        self.image_matrix = np.array(self.pixel_matrix)
+        print(self.image_matrix)
 
     def pixel_matrix_from_hash(self, hash_value):
         """ iterate through the hash and set individual pixels to on or off

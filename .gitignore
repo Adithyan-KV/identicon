@@ -3,3 +3,6 @@
 
 #igonore the virtual environment directory
 img
+
+#ignore all the actual image files
+*.jpeg
