@@ -13,8 +13,8 @@ def main():
     img_color = add_color_to_matrix(img_bw_3d, color)
     print(img_color)
     print(img_color.shape)
-    image = Image.fromarray(img_color.astype(np.uint8))
-    image.save('color_identicon.jpeg')
+    image = Image.fromarray(img_color.astype(np.uint8), 'RGB')
+    image.save('color_identicon.png')
 
 
 def add_color_to_matrix(matrix, color):
@@ -45,7 +45,7 @@ class ImageDataGenerator():
         self.hash_value = int(hash_hex, 16)
         self.pixel_matrix = self.pixel_matrix_from_hash(self.hash_value)
         self.color = self.random_color_from_hash(self.hash_value)
-        self.bgcolor = '#bfbfbf'
+        self.bgcolor = [220, 220, 220]
         self.image_matrix = np.array(self.pixel_matrix)
 
     def pixel_matrix_from_hash(self, hash_value):
@@ -61,11 +61,11 @@ class ImageDataGenerator():
                 y_mirror_index = 4-y_index
                 if int(digit) % 2 == 0:
                     # mirror values about y axis at center
-                    pixel_matrix[x_index][y_index] = 0
-                    pixel_matrix[x_index][y_mirror_index] = 0
-                else:
                     pixel_matrix[x_index][y_index] = 1
                     pixel_matrix[x_index][y_mirror_index] = 1
+                else:
+                    pixel_matrix[x_index][y_index] = 0
+                    pixel_matrix[x_index][y_mirror_index] = 0
 
         return pixel_matrix
 
