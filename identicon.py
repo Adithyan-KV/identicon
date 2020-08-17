@@ -6,15 +6,21 @@ from PIL import Image
 
 
 def main():
-    image_data = ImageDataGenerator('hello')
+    username = 'adithyankv'
+    image_data = ImageDataGenerator(username)
     img_bw_2d = image_data.image_matrix
     img_bw_3d = np.array([img_bw_2d for i in range(3)])
     color = image_data.color
     img_color = add_color_to_matrix(img_bw_3d, color)
+    for i in range(5):
+        for j in range(5):
+            if img_color[i, j, 0] == 0:
+                img_color[i, j] = image_data.bgcolor
+
     print(img_color)
     print(img_color.shape)
     image = Image.fromarray(img_color.astype(np.uint8), 'RGB')
-    image.save('color_identicon.png')
+    image.save(f'{username}.png')
 
 
 def add_color_to_matrix(matrix, color):
