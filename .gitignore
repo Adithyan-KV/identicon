@@ -11,3 +11,4 @@ img
 
 #ignore the folder with test identicon images
 identicon_images
+*.zip
