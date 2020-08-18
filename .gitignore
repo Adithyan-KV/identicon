@@ -8,3 +8,6 @@ img
 *.jpeg
 *.jpg 
 *.png
+
+#ignore the folder with test identicon images
+identicon_images
