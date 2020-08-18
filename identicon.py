@@ -1,12 +1,10 @@
 import hashlib
 import colorsys
-import colors
 import numpy as np
 from PIL import Image
 
 
-def main():
-    username = 'adithyankv'
+def generate_identicon(username):
     image_data = ImageDataGenerator(username)
     img_bw_2d = image_data.image_matrix
     img_bw_3d = np.array([img_bw_2d for i in range(3)])
@@ -16,10 +14,8 @@ def main():
         for j in range(5):
             if img_color[i, j, 0] == 0:
                 img_color[i, j] = image_data.bgcolor
-
-    print(img_color)
-    print(img_color.shape)
     image = Image.fromarray(img_color.astype(np.uint8), 'RGB')
+    image = image.resize((256, 256), resample=Image.NEAREST)
     image.save(f'{username}.png')
 
 
@@ -82,10 +78,8 @@ class ImageDataGenerator():
         saturation = 0.78
         value = 0.92
         color_rgb = colorsys.hsv_to_rgb(hue, saturation, value)
-        hex_code = colors.rgb_to_hex(
-            color_rgb[0], color_rgb[1], color_rgb[2], 'normalized')
         return color_rgb
 
 
 if __name__ == "__main__":
-    main()
+    generate_identicon('frillon')
