@@ -34,9 +34,8 @@ def generate_image_data(hash_value):
     image_matrix = np.array(pixel_matrix)
     color = random_color_from_hash(hash_value)
     bgcolor = [220, 220, 220]  # RGB values
-    img_bw_2d = image_matrix
-    img_bw_3d = np.array([img_bw_2d for i in range(3)])
-    img_fg_colored = add_foreground_color(img_bw_3d, color)
+    img_bw = np.array([image_matrix for i in range(3)])
+    img_fg_colored = add_foreground_color(img_bw, color)
     img_colored = add_background_color(img_fg_colored, bgcolor)
 
     return img_colored
@@ -87,23 +86,22 @@ def pixel_matrix_from_hash(hash_value):
         hash_value (int): The hash value of the username of user
 
     Returns:
-        np.array: A black and white pixel map matrix
+        np.array: A symmetric black and white pixel map matrix
     """
     pixel_matrix = [[0 for i in range(5)] for j in range(5)]
     # first 25 characters of the hash to enumerate over
-    hash_string = str(hash_value).strip('-')[:24]
+    hash_string = str(hash_value).strip('-')[:14]
     for index, digit in enumerate(hash_string):
-        x_index = index % 5
-        y_index = index//5
-        if y_index % 5 < 3:
-            y_mirror_index = 4-y_index
-            if int(digit) % 2 == 0:
-                # mirror values about y axis at center
-                pixel_matrix[x_index][y_index] = 1
-                pixel_matrix[x_index][y_mirror_index] = 1
-            else:
-                pixel_matrix[x_index][y_index] = 0
-                pixel_matrix[x_index][y_mirror_index] = 0
+        row = index//3
+        column = index % 3
+        mirror_column = 4-column
+        if int(digit) % 2 == 0:
+            # mirror values about y axis at center
+            pixel_matrix[row][column] = 1
+            pixel_matrix[row][mirror_column] = 1
+        else:
+            pixel_matrix[row][column] = 0
+            pixel_matrix[row][mirror_column] = 0
 
     return pixel_matrix
 
@@ -127,4 +125,4 @@ def random_color_from_hash(hash_value):
 
 
 if __name__ == "__main__":
-    generate_identicon('nunnu')
+    generate_identicon('testname')
