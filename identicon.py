@@ -16,8 +16,8 @@ def generate_identicon(username):
     hash_value = int(hash_hex, 16)
     image_data = generate_image_data(hash_value)
     image = Image.fromarray(image_data.astype(np.uint8), 'RGB')
-    image = image.resize((256, 256), resample=Image.NEAREST)
-    image.save(f'{username}.png')
+    resized_image = image.resize((256, 256), resample=Image.NEAREST)
+    resized_image.save(f'{username}.png')
 
 
 def generate_image_data(hash_value):
@@ -36,13 +36,13 @@ def generate_image_data(hash_value):
     bgcolor = [220, 220, 220]  # RGB values
     img_bw_2d = image_matrix
     img_bw_3d = np.array([img_bw_2d for i in range(3)])
-    img_fg_colored = add_color_to_matrix(img_bw_3d, color)
-    img_colored = set_background_color(img_fg_colored, bgcolor)
+    img_fg_colored = add_foreground_color(img_bw_3d, color)
+    img_colored = add_background_color(img_fg_colored, bgcolor)
 
     return img_colored
 
 
-def set_background_color(image_matrix, color):
+def add_background_color(image_matrix, color):
     """Sets the background pixels of the image to specified bg color
 
     Args:
@@ -61,7 +61,7 @@ def set_background_color(image_matrix, color):
     return image_matrix
 
 
-def add_color_to_matrix(matrix, color):
+def add_foreground_color(matrix, color):
     """Takes in a 3d matrix with on or off pixel values and applies the color
 
     Args:
@@ -109,6 +109,14 @@ def pixel_matrix_from_hash(hash_value):
 
 
 def random_color_from_hash(hash_value):
+    """Take a hash and return a color value corresponding to it
+
+    Args:
+        hash_value (int): The hash of a username
+
+    Returns:
+        tuple: color corresponding to hash as R,G,B
+    """
     # set a random hue value between 0 and 100 based on the hash
     hue = (hash_value % 100)/100
     # saturation, value hardcoded for consistency in palette
@@ -119,4 +127,4 @@ def random_color_from_hash(hash_value):
 
 
 if __name__ == "__main__":
-    generate_identicon('frillon')
+    generate_identicon('nunnu')
