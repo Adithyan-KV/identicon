@@ -4,11 +4,12 @@ import numpy as np
 from PIL import Image, ImageOps
 
 
-def generate_identicon(username):
+def generate_identicon(username, size):
     """Generate an identicon and save as image
 
     Args:
-        username (string): The username for which to generate identicon
+        username (str): The username for which to generate identicon
+        size (int): The dimension of the side of the square image in pixels
     """
     # sha1 hash used over default hash in python as default hash is salted
     # and determinism is lost
@@ -16,9 +17,10 @@ def generate_identicon(username):
     hash_value = int(hash_hex, 16)
     image_data = generate_image_data(hash_value)
     image = Image.fromarray(image_data.astype(np.uint8), 'RGB')
-    resized_image = image.resize((230, 230), resample=Image.NEAREST)
-    padded_image = ImageOps.expand(
-        resized_image, 13, (220, 220, 220))
+    padding = round(size*0.1)
+    content = size-padding
+    resized_image = image.resize((content, content), resample=Image.NEAREST)
+    padded_image = ImageOps.expand(resized_image, padding, (220, 220, 220))
     padded_image.save(f'{username}.png')
 
 
@@ -127,4 +129,4 @@ def random_color_from_hash(hash_value):
 
 
 if __name__ == "__main__":
-    generate_identicon('testname')
+    generate_identicon('testname', 256)
