@@ -5,9 +5,9 @@
 img
 
 #ignore all the actual image files
-*.jpeg
-*.jpg 
-*.png
+#*.jpeg
+#*.jpg 
+#*.png
 
 #ignore the folder with test identicon images
 identicon_images
