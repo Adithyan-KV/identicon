@@ -18,7 +18,8 @@ pip install pillow
 
 ## Usage
 Clone the repo and from its contents copy paste the *identicons.py* file to your working directory. After that Identicons can be imported as a module and used.
-*( yes it is very shabby, but no one is ever going to use this stuff, Might upload it to PyPi if i feel like making the process more streamlined )*
+*( yes it is very shabby, but no one is ever going to use this stuff, Might upload it to PyPi if it ever gets half competent and
+i feel like making the process more streamlined )*
 
 ```
 import identicons
