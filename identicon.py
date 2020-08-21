@@ -1,7 +1,7 @@
 import colorsys
 import hashlib
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 def generate_identicon(username):
@@ -16,8 +16,10 @@ def generate_identicon(username):
     hash_value = int(hash_hex, 16)
     image_data = generate_image_data(hash_value)
     image = Image.fromarray(image_data.astype(np.uint8), 'RGB')
-    resized_image = image.resize((256, 256), resample=Image.NEAREST)
-    resized_image.save(f'{username}.png')
+    resized_image = image.resize((230, 230), resample=Image.NEAREST)
+    padded_image = ImageOps.expand(
+        resized_image, 13, (220, 220, 220))
+    padded_image.save(f'{username}.png')
 
 
 def generate_image_data(hash_value):
