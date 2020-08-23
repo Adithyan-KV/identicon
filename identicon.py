@@ -1,15 +1,19 @@
 import colorsys
 import hashlib
 import numpy as np
+import os
 from PIL import Image, ImageOps
 
 
-def generate_identicon(username, size):
+def generate_identicon(username, size=256, path=os.getcwd()):
     """Generate an identicon and save as image
 
     Args:
         username (str): The username for which to generate identicon
-        size (int): The dimension of the side of the square image in pixels
+        size (int) [optional, default = 256]:
+            The dimension of the side of the square image in pixels
+        path (str) [optional, default = current working directory]:
+            The path to the folder in which the image is to be saved
     """
     # sha1 hash used over default hash in python as default hash is salted
     # and determinism is lost
@@ -21,7 +25,14 @@ def generate_identicon(username, size):
     content = size-padding
     resized_image = image.resize((content, content), resample=Image.NEAREST)
     padded_image = ImageOps.expand(resized_image, padding, (220, 220, 220))
-    padded_image.save(f'{username}.png')
+    path_to_file = os.path.join(path, f'{username}.png')
+    if os.path.exists(path):
+        try:
+            padded_image.save(path_to_file)
+        except Exception:
+            raise Exception("Couldn't write to image")
+    else:
+        raise OSError(f"the path {path} doesn't exist")
 
 
 def generate_image_data(hash_value):
@@ -129,4 +140,4 @@ def random_color_from_hash(hash_value):
 
 
 if __name__ == "__main__":
-    generate_identicon('testname', 256)
+    generate_identicon('testname')
