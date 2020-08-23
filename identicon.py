@@ -5,7 +5,7 @@ import os
 from PIL import Image, ImageOps
 
 
-def generate_identicon(username, size=256, path=os.getcwd()):
+def generate_identicon(username, size=256, path=os.getcwd(), file_format='jpeg'):
     """Generate an identicon and save as image
 
     Args:
@@ -14,6 +14,8 @@ def generate_identicon(username, size=256, path=os.getcwd()):
             The dimension of the side of the square image in pixels
         path (str) [optional, default = current working directory]:
             The path to the folder in which the image is to be saved
+        file_format(str) [optional, default = JPEG format]:
+            'png': save as PNG
     """
     # sha1 hash used over default hash in python as default hash is salted
     # and determinism is lost
@@ -25,14 +27,30 @@ def generate_identicon(username, size=256, path=os.getcwd()):
     content = size-padding
     resized_image = image.resize((content, content), resample=Image.NEAREST)
     padded_image = ImageOps.expand(resized_image, padding, (220, 220, 220))
-    path_to_file = os.path.join(path, f'{username}.png')
-    if os.path.exists(path):
-        try:
-            padded_image.save(path_to_file)
-        except Exception:
-            raise Exception("Couldn't write to image")
+    save_image(padded_image, path, username, file_format)
+
+
+def save_image(image, path, filename, format):
+    """Saves the image file in the specified format to the specified path
+
+    Args:
+        image (np.array): The image data
+        path (str): The path to the folder in which to save
+        filename (str): the name of the image file
+        format (str): The format in which to save the image
+    """
+    supported_extensions = ['jpeg', 'jpg', 'png']
+    if format.lower() in supported_extensions:
+        if os.path.exists(path):
+            path_to_file = os.path.join(path, f'{filename}.{format}')
+            try:
+                image.save(path_to_file)
+            except Exception:
+                raise Exception("Couldn't write to image")
+        else:
+            raise OSError(f"the path {path} doesn't exist")
     else:
-        raise OSError(f"the path {path} doesn't exist")
+        raise Exception(f'Invalid file extension {format}')
 
 
 def generate_image_data(hash_value):
@@ -140,4 +158,4 @@ def random_color_from_hash(hash_value):
 
 
 if __name__ == "__main__":
-    generate_identicon('testname')
+    generate_identicon('testname', file_format='bleh')

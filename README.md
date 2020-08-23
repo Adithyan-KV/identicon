@@ -28,8 +28,4 @@ import identicons
 identicons.generate('username',256)
 ```
 
-Doesn't allow for any format other than PNG right now.
-Doesn't support writing to a different path as of now.
-Doesn't allow to access the image data instead of writing it out as of now.
-
-These are all trivial fixes and I'll prolly fix them soon.
+The identicon file can be saved as either a *PNG* or as a *JPEG* file.
